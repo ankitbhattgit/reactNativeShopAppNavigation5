@@ -16,7 +16,7 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import Colors from '../../constants/Colors';
 import * as productActions from '../../store/actions/products';
 
-const ProductOverviewScreen = (props) => {
+const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsloading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState('');
@@ -36,11 +36,9 @@ const ProductOverviewScreen = (props) => {
 
   // navigation listener to update data on menu screens
   useEffect(() => {
-    const willFocusSub = props.navigation.addListener('willFocus', () =>
-      loadProducts(),
-    );
+    const unsubscribe = props.navigation.addListener('focus', loadProducts);
     return () => {
-      willFocusSub.remove();
+      unsubscribe();
     };
   }, [loadProducts]);
 
@@ -52,12 +50,9 @@ const ProductOverviewScreen = (props) => {
   }, [dispatch, loadProducts]);
 
   const selectItemHandler = (id, title) => {
-    props.navigation.navigate({
-      routeName: 'ProductDetail',
-      params: {
-        productId: id,
-        productTitle: title,
-      },
+    props.navigation.navigate('ProductDetail', {
+      productId: id,
+      productTitle: title,
     });
   };
 
@@ -123,7 +118,7 @@ const ProductOverviewScreen = (props) => {
   );
 };
 
-ProductOverviewScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: 'All Products',
     headerLeft: () => (
@@ -159,4 +154,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductOverviewScreen;
+export default ProductsOverviewScreen;
